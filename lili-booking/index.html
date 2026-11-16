@@ -66,8 +66,11 @@ main{padding:16px 0 132px}
 .slot.on span{color:#fff}
 .slot:disabled{background:#F1ECE8;color:var(--faint);cursor:default}
 .slot:disabled span{color:var(--mut)}
-.slot.other{grid-column:1/-1;min-height:48px;display:flex;align-items:center;justify-content:center;gap:8px}
-.slot.other b{display:inline;font-size:16px}
+.slot.other{grid-column:1/-1;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-style:dashed;border-color:var(--pri);background:#FBF6F2}
+.slot.other.on{border-style:solid;background:var(--pri)}
+.slot.other b{display:block;font-size:16px;color:var(--pri)}
+.slot.other.on b{color:#fff}
+.d.full[data-act]{cursor:pointer;border:1px dashed var(--line)}
 .custom{margin-top:10px;padding:12px;border:1px dashed #E3B9A5;border-radius:12px;background:var(--tint)}
 .custom input{max-width:160px}
 .tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:#FDF0D9;color:#9A6512;margin-left:6px;vertical-align:middle}
@@ -268,7 +271,9 @@ function drawCal() {
     var ds = ymd(y, m, d), info = S.days[ds], st = info ? info.status : 'past';
     var cls = 'd ' + st + (ds === S.date ? ' sel' : '') + (ds === today ? ' today' : '');
     var tag = st === 'closed' ? '休' : st === 'full' ? '滿' : '';
+    var canCustom = st === 'full' && S.cfg.custom && S.cfg.custom.enabled && S.mode !== 'reschedule';
     if (st === 'open') h += '<button class="' + cls + '" data-act="date" data-d="' + ds + '" aria-label="' + dlabel(ds) + ' 可預約">' + d + '<em></em></button>';
+    else if (canCustom) h += '<button class="' + cls + '" data-act="date" data-d="' + ds + '" aria-label="' + dlabel(ds) + ' 固定場次額滿，可自填時段">' + d + '<em>滿</em></button>';
     else h += '<div class="' + cls + '" aria-label="' + dlabel(ds) + (tag === '休' ? ' 公休' : tag === '滿' ? ' 額滿' : ' 不可預約') + '">' + d + '<em>' + tag + '</em></div>';
   }
   h += '</div><div class="legend"><span><b style="border:1px solid var(--line);background:#fff;color:var(--pri)">●</b>可預約</span>' +
@@ -279,14 +284,14 @@ function drawCal() {
 }
 function drawSlots() {
   var el = $('slots');
-  if (!S.date) { el.innerHTML = '<p class="hint">請先點選有圓點的日期。</p>'; return; }
+  if (!S.date) { el.innerHTML = '<p class="hint">請先點選有圓點的日期。' + (S.cfg.custom && S.cfg.custom.enabled ? '固定場次不方便，也可選日期後點「自填時段」。' : '') + '</p>'; return; }
   var day = S.days[S.date];
   el.innerHTML = '<div class="slots">' + day.slots.map(function (s) {
     var t = s.label.split('-');
     return '<button class="slot' + (s.id === S.slotId ? ' on' : '') + '" data-act="slot" data-id="' + s.id + '"' + (s.available ? '' : ' disabled') + '><b>' + t[0] + '</b><span>' +
       (s.available ? '至 ' + t[1] : (s.reason === 'late' ? '已截止' : '額滿')) + '</span></button>';
   }).join('') + (S.cfg.custom && S.cfg.custom.enabled && S.mode !== 'reschedule' ?
-    '<button class="slot other' + (S.slotId === 'CUSTOM' ? ' on' : '') + '" data-act="slot" data-id="CUSTOM"><b>其他時間</b><span>自行填寫，需美甲師確認</span></button>' : '') + '</div>' +
+    '<button class="slot other' + (S.slotId === 'CUSTOM' ? ' on' : '') + '" data-act="slot" data-id="CUSTOM"><b>✎ 自填時段</b><span>以上時間不方便？自行填寫，需美甲師確認</span></button>' : '') + '</div>' +
     (S.slotId === 'CUSTOM' ? '<div class="custom"><label class="f" style="margin:0">希望的開始時間（' + esc(S.cfg.custom.earliest) + '–' + esc(S.cfg.custom.latest) + '）<input type="time" id="fTime" step="1800" min="' + esc(S.cfg.custom.earliest) + '" max="' + esc(S.cfg.custom.latest) + '" value="' + esc(S.customTime || '') + '"></label><p class="hint">送出後為「待確認」，美甲師確認後會在 LINE 通知您。</p></div>' : '') +
     '<p class="hint">' + esc(dlabel(S.date)) + '｜每場約 2 小時</p>';
 }
