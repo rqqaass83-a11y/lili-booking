@@ -68,6 +68,7 @@ main{padding:16px 0 132px}
 .slot:disabled span{color:var(--mut)}
 .slot.other{grid-column:1/-1;min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-style:dashed;border-color:var(--pri);background:#FBF6F2}
 .slot.other.on{border-style:solid;background:var(--pri)}
+.trow{display:flex;align-items:flex-end;gap:8px}.trow label{flex:1}.trow span{padding-bottom:12px;color:var(--mut)}
 .slot.other b{display:block;font-size:16px;color:var(--pri)}
 .slot.other.on b{color:#fff}
 .d.full[data-act]{cursor:pointer;border:1px dashed var(--line)}
@@ -246,8 +247,8 @@ function renderBook() {
     h += '<section class="sec" id="secSvc"><h2><i>2</i>選擇服務</h2><div id="svc"></div><p class="hint">全項目皆含基礎指緣護理。</p></section>';
     h += '<section class="sec"><h2><i>3</i>加購與卸甲</h2><div id="add"></div></section>';
     h += '<section class="sec" id="secInfo"><h2><i>4</i>' + (adm ? '顧客資料' : '聯絡資料') + '</h2>' +
-      '<label class="f">姓名<input type="text" id="fName" maxlength="30" autocomplete="name" value="' + esc(adm ? '' : S.name) + '"></label>' +
-      '<label class="f">手機號碼<input type="tel" id="fPhone" inputmode="tel" maxlength="14" autocomplete="tel" placeholder="0912345678" value="' + esc(adm ? '' : (S.phone || '')) + '"></label>' +
+      '<label class="f">姓名（必填）<input type="text" id="fName" maxlength="30" autocomplete="name" value="' + esc(adm ? '' : S.name) + '"></label>' +
+      '<label class="f">手機號碼（必填）<input type="tel" id="fPhone" inputmode="tel" maxlength="14" autocomplete="tel" placeholder="0912345678" value="' + esc(adm ? '' : (S.phone || '')) + '"></label>' +
       '<label class="f">備註（選填）<textarea id="fNote" maxlength="200" placeholder="例：延甲、指甲狀況、特殊需求"></textarea></label>' +
       (adm ? '' : '<p class="hint">想讓我們先看參考圖，預約後直接傳到聊天室就可以。</p><label class="agree"><input type="checkbox" id="fAgree"><span>' + esc(S.cfg.privacy) + '</span></label>') +
       '</section>';
@@ -292,7 +293,10 @@ function drawSlots() {
       (s.available ? '至 ' + t[1] : (s.reason === 'late' ? '已截止' : '額滿')) + '</span></button>';
   }).join('') + (S.cfg.custom && S.cfg.custom.enabled && S.mode !== 'reschedule' ?
     '<button class="slot other' + (S.slotId === 'CUSTOM' ? ' on' : '') + '" data-act="slot" data-id="CUSTOM"><b>✎ 自填時段</b><span>以上時間不方便？自行填寫，需美甲師確認</span></button>' : '') + '</div>' +
-    (S.slotId === 'CUSTOM' ? '<div class="custom"><label class="f" style="margin:0">希望的開始時間（' + esc(S.cfg.custom.earliest) + '–' + esc(S.cfg.custom.latest) + '）<input type="time" id="fTime" step="1800" min="' + esc(S.cfg.custom.earliest) + '" max="' + esc(S.cfg.custom.latest) + '" value="' + esc(S.customTime || '') + '"></label><p class="hint">送出後為「待確認」，美甲師確認後會在 LINE 通知您。</p></div>' : '') +
+    (S.slotId === 'CUSTOM' ? '<div class="custom"><p class="hint" style="margin:0 0 8px">希望的施作時段（' + esc(S.cfg.custom.earliest) + '–' + esc(S.cfg.custom.latest) + ' 之間）</p><div class="trow">' +
+      '<label class="f" style="margin:0">開始<input type="time" id="fTime" step="1800" min="' + esc(S.cfg.custom.earliest) + '" max="' + esc(S.cfg.custom.latest) + '" value="' + esc(S.customTime || '') + '"></label><span>～</span>' +
+      '<label class="f" style="margin:0">結束<input type="time" id="fTimeEnd" step="1800" min="' + esc(S.cfg.custom.earliest) + '" max="' + esc(S.cfg.custom.latest) + '" value="' + esc(S.customEnd || '') + '"></label></div>' +
+      '<p class="hint">送出後為「待確認」，美甲師確認後會在 LINE 通知您。</p></div>' : '') +
     '<p class="hint">' + esc(dlabel(S.date)) + '｜每場約 2 小時</p>';
 }
 function drawSvc() {
@@ -332,7 +336,7 @@ function drawBar() {
   $('submit').textContent = S.busy ? '處理中…' : (res ? '確認改期' : '送出預約');
   $('submit').disabled = S.busy;
 }
-function slotLabel() { if (S.slotId === 'CUSTOM') return (S.customTime || '其他時間'); var l = ''; S.cfg.slots.forEach(function (s) { if (s.id === S.slotId) l = s.label; }); return l; }
+function slotLabel() { if (S.slotId === 'CUSTOM') return S.customTime ? S.customTime + (S.customEnd ? '–' + S.customEnd : '') : '自填時段'; var l = ''; S.cfg.slots.forEach(function (s) { if (s.id === S.slotId) l = s.label; }); return l; }
 
 function submit() {
   if (S.busy) return;
@@ -346,15 +350,17 @@ function submit() {
   var adm = S.mode === 'admin';
   if (!adm && !$('fAgree').checked) return need('請勾選同意個資使用說明', $('fAgree'));
   S.phone = phone;
-  if (S.slotId === 'CUSTOM' && !/^\d{2}:\d{2}$/.test(S.customTime || '')) return need('請填寫希望的開始時間', $('fTime'));
-  run('book', { date: S.date, slotId: S.slotId, customTime: S.slotId === 'CUSTOM' ? S.customTime : '', sel: S.sel, name: name, phone: phone, note: $('fNote').value.trim(), consent: !adm, admin: adm }, adm ? 'admin' : 'new');
+  if (S.slotId === 'CUSTOM' && !/^\d{2}:\d{2}$/.test(S.customTime || '')) return need('請填寫開始時間', $('fTime'));
+  if (S.slotId === 'CUSTOM' && !/^\d{2}:\d{2}$/.test(S.customEnd || '')) return need('請填寫結束時間', $('fTimeEnd'));
+  if (S.slotId === 'CUSTOM' && S.customEnd <= S.customTime) return need('結束時間要晚於開始時間', $('fTimeEnd'));
+  run('book', { date: S.date, slotId: S.slotId, customTime: S.slotId === 'CUSTOM' ? S.customTime : '', customEnd: S.slotId === 'CUSTOM' ? S.customEnd : '', sel: S.sel, name: name, phone: phone, note: $('fNote').value.trim(), consent: !adm, admin: adm }, adm ? 'admin' : 'new');
 }
 function run(action, data, kind) {
   S.busy = true; drawBar();
   api(action, data).then(function (r) {
     S.busy = false; S.last = { booking: r.booking, kind: kind };
     if (r.bookings) S.bookings = r.bookings;
-    S.mode = 'new'; S.date = S.slotId = null; S.customTime = ''; S.sel = { main: null, patch: 0, extend: 0, removal: 'none' };
+    S.mode = 'new'; S.date = S.slotId = null; S.customTime = ''; S.customEnd = ''; S.sel = { main: null, patch: 0, extend: 0, removal: 'none' };
     try { go('done'); } catch (e) {}
     var after; try { after = kind === 'admin' ? Promise.resolve() : notifyChat(r.booking, kind); } catch (e) { after = Promise.resolve(); }
     var t0 = Date.now(), auto = kind !== 'admin' && !DEMO && liff.isInClient();
@@ -447,7 +453,7 @@ function lockCall(action, data) {
 }
 
 // ───────── 事件 ─────────
-document.addEventListener('input', function (ev) { if (ev.target.id === 'fTime') { S.customTime = ev.target.value; drawBar(); } });
+document.addEventListener('input', function (ev) { if (ev.target.id === 'fTime') { S.customTime = ev.target.value; drawBar(); } if (ev.target.id === 'fTimeEnd') { S.customEnd = ev.target.value; drawBar(); } });
 document.addEventListener('click', function (ev) {
   var el = ev.target.closest('[data-act]');
   if (!el) { if (ev.target.id === 'modal') closeModal(); return; }
@@ -479,7 +485,7 @@ document.addEventListener('click', function (ev) {
 // ───────── 示範模式（?demo=1 或 ?demo=owner）：不連後端，方便先看畫面 ─────────
 var demo = { bookings: [], locks: { holidays: [], locks: [] } };
 function demoApi(action, d) {
-  var cfg = { custom: { enabled: true, earliest: '08:00', latest: '20:00', minutes: 120 }, studio: '@Li麗 Nail Studio', today: (function () { var n = new Date(); return ymd(n.getFullYear(), n.getMonth() + 1, n.getDate()); })(), maxAdvanceDays: 60, oaUrl: '',
+  var cfg = { custom: { enabled: true, earliest: '08:00', latest: '22:00', minutes: 120 }, studio: '@Li麗 Nail Studio', today: (function () { var n = new Date(); return ymd(n.getFullYear(), n.getMonth() + 1, n.getDate()); })(), maxAdvanceDays: 60, oaUrl: '',
     slots: [{ id: 'S1', label: '10:00-12:00' }, { id: 'S2', label: '13:30-15:30' }, { id: 'S3', label: '16:00-18:00' }],
     notices: ['本店為全預約制，僅接受預約來店。', '全項目皆含基礎指緣護理（消毒→修型→甘皮→去油→指緣油）。', '延甲需提前告知，請在預約時選擇指數或於備註說明。', '設計款依實際內容報價，金額以現場為準。', '如需取消或改期，請點「預約查詢」操作，或直接傳訊息給我們。', '建議每 25–28 天卸甲保養。'],
     privacy: '我同意 @Li麗 Nail Studio 蒐集我的姓名、電話與 LINE 帳號識別碼，僅用於本次預約的聯繫與提醒。',
@@ -511,7 +517,7 @@ function demoApi(action, d) {
     c.main.forEach(function (g) { g.items.forEach(function (it) { if (it.id === d.sel.main) m = it; }); });
     c.perFinger.forEach(function (p) { if (d.sel[p.id]) { ex += d.sel[p.id] * p.price; add.push(p.name + '×' + d.sel[p.id] + '指'); } });
     c.removal.forEach(function (r) { if (r.id === d.sel.removal && r.price) { ex += r.price; add.push(r.name); } });
-    return { id: 'LL' + d.date.substr(5, 2) + d.date.substr(8, 2) + '-DEM', date: d.date, dateLabel: dlabel(d.date), slotId: d.slotId, slot: d.slotId === 'CUSTOM' ? d.customTime + '-' + (function (t) { var m = +t.substr(0, 2) * 60 + +t.substr(3, 2) + 120; return pad(Math.floor(m / 60)) + ':' + pad(m % 60); })(d.customTime) : cfg.slots.filter(function (s) { return s.id === d.slotId; })[0].label, pending: d.slotId === 'CUSTOM' && !d.admin,
+    return { id: 'LL' + d.date.substr(5, 2) + d.date.substr(8, 2) + '-DEM', date: d.date, dateLabel: dlabel(d.date), slotId: d.slotId, slot: d.slotId === 'CUSTOM' ? d.customTime + '-' + d.customEnd : cfg.slots.filter(function (s) { return s.id === d.slotId; })[0].label, pending: d.slotId === 'CUSTOM' && !d.admin,
       main: m.name, addons: add.join('、'), price: m.min + ex, priceMax: m.max + ex, priceText: price(m.min + ex, m.max + ex), status: '已預約' };
   };
   var locks = function () { return { holidays: demo.locks.holidays, locks: demo.locks.locks }; };
