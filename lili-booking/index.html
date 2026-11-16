@@ -369,7 +369,8 @@ function run(action, data, kind) {
 function notifyChat(b, kind) {
   if (DEMO) return Promise.resolve();
   var txt = (kind === 'reschedule' ? '我已改期預約 #' : '我已完成預約 #') + b.id;
-  var p = (liff.isInClient() && liff.isApiAvailable('sendMessages')) ? liff.sendMessages([{ type: 'text', text: txt }]) : Promise.reject();
+  var p;
+  try { p = liff.isInClient() ? liff.sendMessages([{ type: 'text', text: txt }]) : Promise.reject(); } catch (e) { p = Promise.reject(e); }
   return p.catch(function () { return api('confirmPush', { id: b.id, kind: kind }).catch(function () {}); });
 }
 
