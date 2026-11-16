@@ -354,9 +354,10 @@ function run(action, data, kind) {
   api(action, data).then(function (r) {
     S.busy = false; S.last = { booking: r.booking, kind: kind };
     if (r.bookings) S.bookings = r.bookings;
-    var after = kind === 'admin' ? Promise.resolve() : notifyChat(r.booking, kind);
-    return after.then(function () { return api('init', {}); }).then(function (x) { S.bookings = x.bookings; setDays(x.days); }).catch(function () {})
-      .then(function () { S.mode = 'new'; S.date = S.slotId = null; S.customTime = ''; S.sel = { main: null, patch: 0, extend: 0, removal: 'none' }; go('done'); });
+    S.mode = 'new'; S.date = S.slotId = null; S.customTime = ''; S.sel = { main: null, patch: 0, extend: 0, removal: 'none' };
+    try { go('done'); } catch (e) {}
+    var after; try { after = kind === 'admin' ? Promise.resolve() : notifyChat(r.booking, kind); } catch (e) { after = Promise.resolve(); }
+    after.catch(function () {}).then(function () { return api('init', {}); }).then(function (x) { S.bookings = x.bookings; setDays(x.days); }).catch(function () {});
   }).catch(function (e) {
     S.busy = false; drawBar(); toast(e.message);
     if (e.code === 'TAKEN' || e.code === 'LATE' || e.code === 'CLOSED') { // 時段被搶走 → 重新載入空檔
