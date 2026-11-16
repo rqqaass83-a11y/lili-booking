@@ -248,7 +248,7 @@ function renderBook() {
     h += '<section class="sec"><h2><i>3</i>加購與卸甲</h2><div id="add"></div></section>';
     h += '<section class="sec" id="secInfo"><h2><i>4</i>' + (adm ? '顧客資料' : '聯絡資料') + '</h2>' +
       '<label class="f">姓名（必填）<input type="text" id="fName" maxlength="30" autocomplete="name" value="' + esc(adm ? '' : S.name) + '"></label>' +
-      '<label class="f">手機號碼（必填）<input type="tel" id="fPhone" inputmode="tel" maxlength="14" autocomplete="tel" placeholder="0912345678" value="' + esc(adm ? '' : (S.phone || '')) + '"></label>' +
+      '<label class="f">手機號碼（選填）<input type="tel" id="fPhone" inputmode="tel" maxlength="14" autocomplete="tel" placeholder="0912345678" value="' + esc(adm ? '' : (S.phone || '')) + '"></label>' +
       '<label class="f">備註（選填）<textarea id="fNote" maxlength="200" placeholder="例：延甲、指甲狀況、特殊需求"></textarea></label>' +
       (adm ? '' : '<p class="hint">想讓我們先看參考圖，預約後直接傳到聊天室就可以。</p><label class="agree"><input type="checkbox" id="fAgree"><span>' + esc(S.cfg.privacy) + '</span></label>') +
       '</section>';
@@ -346,7 +346,7 @@ function submit() {
   if (!S.sel.main) return need('請選擇服務項目', $('secSvc'));
   var name = $('fName').value.trim(), phone = $('fPhone').value.replace(/[^\d]/g, '');
   if (!name) return need('請輸入姓名', $('fName'));
-  if (!/^(09\d{8}|0[2-8]\d{7,8})$/.test(phone)) return need('請輸入正確的手機號碼', $('fPhone'));
+  if (phone && !/^(09\d{8}|0[2-8]\d{7,8})$/.test(phone)) return need('手機號碼格式不正確（可不填）', $('fPhone'));
   var adm = S.mode === 'admin';
   if (!adm && !$('fAgree').checked) return need('請勾選同意個資使用說明', $('fAgree'));
   S.phone = phone;
