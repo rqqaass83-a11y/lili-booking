@@ -7,12 +7,19 @@
 <title>@Li麗 Nail Studio 線上預約</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#FBF9F7;--pri:#D87D56;--pri-d:#B9633F;--tint:#FBEDE6;--tx:#2B2523;--line:#E8DFD8;--mut:#7A6D66;--faint:#C4B9B1;--card:#fff;--serif:'Noto Serif TC','Songti TC','PMingLiU',serif}
+:root{--bg:#FBF9F7;--pri:#D87D56;--pri-d:#B9633F;--tint:#FBEDE6;--tx:#2B2523;--line:#E8DFD8;--mut:#7A6D66;--faint:#C4B9B1;--card:#fff;--serif:'Noto Serif TC','Noto Serif CJK TC','Songti TC','PMingLiU',serif}
+.hero{text-align:center;padding:8px 0 18px}
+.hero .crest{width:46px;height:46px;border:1.5px solid var(--pri);border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font:italic 600 22px var(--serif);color:var(--pri)}
+.hero .eye{font-size:11px;letter-spacing:.32em;color:var(--pri)}
+.hero h1{font:500 24px/1.3 var(--serif);letter-spacing:.12em;margin:6px 0 2px}
+.hero .dv{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0}
+.hero .dv i{width:36px;height:1px;background:var(--pri);opacity:.6}.hero .dv b{width:5px;height:5px;background:var(--pri);transform:rotate(45deg)}
+.hero p{margin:0;font-size:13px;color:var(--mut)}
 *,*::before,*::after{box-sizing:border-box}
 *{-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 -apple-system,BlinkMacSystemFont,'PingFang TC','Noto Sans TC','Microsoft JhengHei',sans-serif}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:400 16px/1.6 var(--serif);letter-spacing:.03em}
 button,input,textarea,select{font:inherit;color:inherit}
 button{cursor:pointer;border:0;background:none;padding:0}
 .wrap{max-width:480px;margin:0 auto;padding:0 16px}
@@ -25,8 +32,8 @@ nav button{font-size:14px;padding:6px 12px;border-radius:999px;color:var(--mut);
 nav button.on{background:#fff;color:var(--tx);font-weight:600;box-shadow:0 1px 2px rgba(43,37,35,.08)}
 main{padding:16px 0 132px}
 .sec{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
-.sec h2{font:700 17px/1.3 var(--serif);margin:0 0 12px;display:flex;align-items:center;gap:8px}
-.sec h2 i{font:600 13px/22px sans-serif;font-style:normal;width:22px;height:22px;border-radius:50%;background:var(--pri);color:#fff;text-align:center;flex:none}
+.sec h2{font:500 18px/1.3 var(--serif);letter-spacing:.1em;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.sec h2 i{font:500 12px/22px var(--serif);font-style:normal;width:22px;height:22px;border-radius:50%;background:var(--pri);color:#fff;text-align:center;flex:none}
 .hint{font-size:13px;color:var(--mut);margin:8px 0 0}
 .banner{background:var(--tint);border:1px solid #F0CDBB;border-radius:12px;padding:12px 14px;font-size:14px;margin-bottom:14px}
 .banner a,.banner button{color:var(--pri-d);font-weight:600;text-decoration:underline}
@@ -59,12 +66,17 @@ main{padding:16px 0 132px}
 .slot.on span{color:#fff}
 .slot:disabled{background:#F1ECE8;color:var(--faint);cursor:default}
 .slot:disabled span{color:var(--mut)}
+.slot.other{grid-column:1/-1;min-height:48px;display:flex;align-items:center;justify-content:center;gap:8px}
+.slot.other b{display:inline;font-size:16px}
+.custom{margin-top:10px;padding:12px;border:1px dashed #E3B9A5;border-radius:12px;background:var(--tint)}
+.custom input{max-width:160px}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:#FDF0D9;color:#9A6512;margin-left:6px;vertical-align:middle}
 /* services */
 .grp{font-size:13px;color:var(--mut);letter-spacing:.08em;margin:14px 0 6px}
 .grp:first-of-type{margin-top:0}
 .opt{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:6px;background:#fff;min-height:48px}
 .opt .n{flex:1}
-.opt .p{font-weight:600;white-space:nowrap}
+.opt .p{font-weight:500;white-space:nowrap}
 .opt::before{content:'';flex:none;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--faint)}
 .opt.on{border-color:var(--pri);background:var(--tint)}
 .opt.on::before{border:5px solid var(--pri)}
@@ -88,7 +100,7 @@ ul.notes{margin:0;padding-left:18px;font-size:13px;color:var(--mut)}
 #bar .sum small{display:block;font-size:12px;color:var(--mut)}
 #bar .sum b{font:700 20px/1.2 var(--serif)}
 #bar .sum b.none{font:400 14px sans-serif;color:var(--mut)}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:999px;background:var(--pri);color:#fff;font-weight:700;font-size:16px;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:999px;background:var(--pri);color:#fff;font-weight:600;letter-spacing:.12em;font-size:16px;white-space:nowrap}
 .btn:active{background:var(--pri-d)}
 .btn:disabled{opacity:.55}
 .btn.ghost{background:#fff;color:var(--tx);border:1px solid var(--line);font-weight:600}
@@ -225,6 +237,7 @@ function renderBook() {
   var res = S.mode === 'reschedule', adm = S.mode === 'admin', h = '';
   if (res) h += '<div class="banner">正在改期：<b>' + esc(S.res.dateLabel + ' ' + S.res.slot) + '</b>｜' + esc(S.res.main) + '<br>請選擇新的日期與時段。<button data-act="cancelRes">放棄改期</button></div>';
   if (adm) h += '<div class="banner">店長手動新增預約（不受 12 小時限制，不會傳訊息給客人）。<button data-act="exitAdmin">返回</button></div>';
+  if (!res && !adm) h += '<div class="hero"><div class="crest">L</div><div class="eye">PRIVATE NAIL ATELIER</div><h1>預約專屬美甲時光</h1><div class="dv"><i></i><b></b><i></i></div><p>全項目皆含基礎指緣護理・每場約 2 小時</p></div>';
   h += '<section class="sec"><h2><i>1</i>選擇日期與時段</h2><div id="cal"></div><div id="slots"></div></section>';
   if (!res) {
     h += '<section class="sec" id="secSvc"><h2><i>2</i>選擇服務</h2><div id="svc"></div><p class="hint">全項目皆含基礎指緣護理。</p></section>';
@@ -272,7 +285,10 @@ function drawSlots() {
     var t = s.label.split('-');
     return '<button class="slot' + (s.id === S.slotId ? ' on' : '') + '" data-act="slot" data-id="' + s.id + '"' + (s.available ? '' : ' disabled') + '><b>' + t[0] + '</b><span>' +
       (s.available ? '至 ' + t[1] : (s.reason === 'late' ? '已截止' : '額滿')) + '</span></button>';
-  }).join('') + '</div><p class="hint">' + esc(dlabel(S.date)) + '｜每場約 2.5 小時</p>';
+  }).join('') + (S.cfg.custom && S.cfg.custom.enabled && S.mode !== 'reschedule' ?
+    '<button class="slot other' + (S.slotId === 'CUSTOM' ? ' on' : '') + '" data-act="slot" data-id="CUSTOM"><b>其他時間</b><span>自行填寫，需美甲師確認</span></button>' : '') + '</div>' +
+    (S.slotId === 'CUSTOM' ? '<div class="custom"><label class="f" style="margin:0">希望的開始時間（' + esc(S.cfg.custom.earliest) + '–' + esc(S.cfg.custom.latest) + '）<input type="time" id="fTime" step="1800" min="' + esc(S.cfg.custom.earliest) + '" max="' + esc(S.cfg.custom.latest) + '" value="' + esc(S.customTime || '') + '"></label><p class="hint">送出後為「待確認」，美甲師確認後會在 LINE 通知您。</p></div>' : '') +
+    '<p class="hint">' + esc(dlabel(S.date)) + '｜每場約 2 小時</p>';
 }
 function drawSvc() {
   $('svc').innerHTML = S.cfg.catalog.main.map(function (g) {
@@ -311,7 +327,7 @@ function drawBar() {
   $('submit').textContent = S.busy ? '處理中…' : (res ? '確認改期' : '送出預約');
   $('submit').disabled = S.busy;
 }
-function slotLabel() { var l = ''; S.cfg.slots.forEach(function (s) { if (s.id === S.slotId) l = s.label; }); return l; }
+function slotLabel() { if (S.slotId === 'CUSTOM') return (S.customTime || '其他時間'); var l = ''; S.cfg.slots.forEach(function (s) { if (s.id === S.slotId) l = s.label; }); return l; }
 
 function submit() {
   if (S.busy) return;
@@ -325,7 +341,8 @@ function submit() {
   var adm = S.mode === 'admin';
   if (!adm && !$('fAgree').checked) return need('請勾選同意個資使用說明', $('fAgree'));
   S.phone = phone;
-  run('book', { date: S.date, slotId: S.slotId, sel: S.sel, name: name, phone: phone, note: $('fNote').value.trim(), consent: !adm, admin: adm }, adm ? 'admin' : 'new');
+  if (S.slotId === 'CUSTOM' && !/^\d{2}:\d{2}$/.test(S.customTime || '')) return need('請填寫希望的開始時間', $('fTime'));
+  run('book', { date: S.date, slotId: S.slotId, customTime: S.slotId === 'CUSTOM' ? S.customTime : '', sel: S.sel, name: name, phone: phone, note: $('fNote').value.trim(), consent: !adm, admin: adm }, adm ? 'admin' : 'new');
 }
 function run(action, data, kind) {
   S.busy = true; drawBar();
@@ -334,7 +351,7 @@ function run(action, data, kind) {
     if (r.bookings) S.bookings = r.bookings;
     var after = kind === 'admin' ? Promise.resolve() : notifyChat(r.booking, kind);
     return after.then(function () { return api('init', {}); }).then(function (x) { S.bookings = x.bookings; setDays(x.days); }).catch(function () {})
-      .then(function () { S.mode = 'new'; S.date = S.slotId = null; S.sel = { main: null, patch: 0, extend: 0, removal: 'none' }; go('done'); });
+      .then(function () { S.mode = 'new'; S.date = S.slotId = null; S.customTime = ''; S.sel = { main: null, patch: 0, extend: 0, removal: 'none' }; go('done'); });
   }).catch(function (e) {
     S.busy = false; drawBar(); toast(e.message);
     if (e.code === 'TAKEN' || e.code === 'LATE' || e.code === 'CLOSED') { // 時段被搶走 → 重新載入空檔
@@ -354,8 +371,9 @@ function notifyChat(b, kind) {
 // ───────── 完成 ─────────
 function renderDone() {
   var b = S.last.booking, k = S.last.kind;
-  $('app').innerHTML = '<section class="sec done"><div class="ok-ic">✓</div><h1>' + (k === 'reschedule' ? '改期成功' : k === 'admin' ? '已新增預約' : '預約成功') + '</h1>' +
-    '<p>' + (k === 'admin' ? '已寫入試算表與日曆。' : '確認單已傳到聊天室，前一天會再提醒您。') + '</p>' + bookingKv(b) +
+  var pend = b.pending && k !== 'admin';
+  $('app').innerHTML = '<section class="sec done"><div class="ok-ic">✓</div><h1>' + (k === 'reschedule' ? '改期成功' : k === 'admin' ? '已新增預約' : pend ? '已送出預約申請' : '預約成功') + '</h1>' +
+    '<p>' + (k === 'admin' ? '已寫入試算表與日曆。' : pend ? '這個時間需要美甲師確認，確認後會在 LINE 通知您。' : '確認單已傳到聊天室，前一天會再提醒您。') + '</p>' + bookingKv(b) +
     (DEMO || !liff.isInClient() ? '' : '<button class="btn block" data-act="close">回到聊天室</button>') +
     '<button class="btn ghost block" data-act="tab" data-v="' + (k === 'admin' ? 'admin' : 'mine') + '">' + (k === 'admin' ? '回店長頁' : '查看我的預約') + '</button></section>';
 }
@@ -370,8 +388,8 @@ function bookingKv(b) {
 function renderMine() {
   if (!S.bookings.length) { $('app').innerHTML = '<div class="center">目前沒有進行中的預約。<br><button class="btn" style="margin-top:16px" data-act="tab" data-v="book">立即預約</button></div>'; return; }
   $('app').innerHTML = S.bookings.map(function (b) {
-    return '<section class="sec bk"><h3>' + esc(b.dateLabel + ' ' + b.slot) + '</h3>' + bookingKv(b) +
-      '<div class="row-btn"><button class="btn ghost sm" data-act="res" data-id="' + b.id + '">改期</button><button class="btn ghost sm" data-act="askCancel" data-id="' + b.id + '">取消預約</button></div></section>';
+    return '<section class="sec bk"><h3>' + esc(b.dateLabel + ' ' + b.slot) + (b.pending ? '<span class="tag">待確認</span>' : '') + '</h3>' + bookingKv(b) +
+      '<div class="row-btn">' + (b.pending ? '' : '<button class="btn ghost sm" data-act="res" data-id="' + b.id + '">改期</button>') + '<button class="btn ghost sm" data-act="askCancel" data-id="' + b.id + '">取消預約</button></div></section>';
   }).join('') + '<p class="hint" style="text-align:center">也可以直接傳訊息給我們協助取消或改期。</p>';
 }
 function byId(id) { return S.bookings.filter(function (b) { return b.id === id; })[0]; }
@@ -418,6 +436,7 @@ function lockCall(action, data) {
 }
 
 // ───────── 事件 ─────────
+document.addEventListener('input', function (ev) { if (ev.target.id === 'fTime') { S.customTime = ev.target.value; drawBar(); } });
 document.addEventListener('click', function (ev) {
   var el = ev.target.closest('[data-act]');
   if (!el) { if (ev.target.id === 'modal') closeModal(); return; }
@@ -449,16 +468,15 @@ document.addEventListener('click', function (ev) {
 // ───────── 示範模式（?demo=1 或 ?demo=owner）：不連後端，方便先看畫面 ─────────
 var demo = { bookings: [], locks: { holidays: [], locks: [] } };
 function demoApi(action, d) {
-  var cfg = { studio: '@Li麗 Nail Studio', today: (function () { var n = new Date(); return ymd(n.getFullYear(), n.getMonth() + 1, n.getDate()); })(), maxAdvanceDays: 60, oaUrl: '',
-    slots: [{ id: 'S1', label: '09:30-12:00' }, { id: 'S2', label: '13:00-15:30' }, { id: 'S3', label: '16:00-18:30' }],
+  var cfg = { custom: { enabled: true, earliest: '08:00', latest: '20:00', minutes: 120 }, studio: '@Li麗 Nail Studio', today: (function () { var n = new Date(); return ymd(n.getFullYear(), n.getMonth() + 1, n.getDate()); })(), maxAdvanceDays: 60, oaUrl: '',
+    slots: [{ id: 'S1', label: '10:00-12:00' }, { id: 'S2', label: '13:30-15:30' }, { id: 'S3', label: '16:00-18:00' }],
     notices: ['本店為全預約制，僅接受預約來店。', '全項目皆含基礎指緣護理（消毒→修型→甘皮→去油→指緣油）。', '延甲需提前告知，請在預約時選擇指數或於備註說明。', '設計款依實際內容報價，金額以現場為準。', '如需取消或改期，請點「預約查詢」操作，或直接傳訊息給我們。', '建議每 25–28 天卸甲保養。'],
     privacy: '我同意 @Li麗 Nail Studio 蒐集我的姓名、電話與 LINE 帳號識別碼，僅用於本次預約的聯繫與提醒。',
     catalog: { main: [
-      { group: '基礎護理', items: [{ id: 'hand_basic', name: '手部基礎修剪', min: 300, max: 300 }, { id: 'foot_basic', name: '足部基礎修剪', min: 500, max: 500 }] },
       { group: '凝膠美甲', items: [{ id: 'solid', name: '基礎單色', min: 700, max: 700 }, { id: 'twotone', name: '跳色美甲', min: 800, max: 800 }, { id: 'cateye', name: '晶石貓眼', min: 900, max: 900 }, { id: 'gradient', name: '漸層凝膠', min: 1100, max: 1100 }, { id: 'french', name: '經典法式', min: 1200, max: 1200 }] },
       { group: '設計款', items: [{ id: 'design', name: '獨家設計款／造型彩繪／立體排鑽', min: 1100, max: 1300 }] }],
       perFinger: [{ id: 'patch', name: '半貼無痕甲片', price: 80 }, { id: 'extend', name: '凝膠延甲', price: 100 }],
-      removal: [{ id: 'none', name: '不需卸甲', price: 0 }, { id: 'remove_in', name: '本店卸甲', price: 200 }, { id: 'remove_out', name: '他店卸甲', price: 300 }, { id: 'remove_out2', name: '他店卸甲（延甲／厚重造型）', price: 400 }] } };
+      removal: [{ id: 'none', name: '不需卸甲', price: 0 }, { id: 'remove_in', name: '本店卸甲', price: 150 }, { id: 'remove_out', name: '他店卸甲', price: 250 }, { id: 'remove_basic', name: '純卸甲＋基礎保養', price: 500 }] } };
   var days = function () {
     var out = [], t = new Date();
     for (var i = 0; i <= 60; i++) {
@@ -482,7 +500,7 @@ function demoApi(action, d) {
     c.main.forEach(function (g) { g.items.forEach(function (it) { if (it.id === d.sel.main) m = it; }); });
     c.perFinger.forEach(function (p) { if (d.sel[p.id]) { ex += d.sel[p.id] * p.price; add.push(p.name + '×' + d.sel[p.id] + '指'); } });
     c.removal.forEach(function (r) { if (r.id === d.sel.removal && r.price) { ex += r.price; add.push(r.name); } });
-    return { id: 'LL' + d.date.substr(5, 2) + d.date.substr(8, 2) + '-DEM', date: d.date, dateLabel: dlabel(d.date), slotId: d.slotId, slot: cfg.slots.filter(function (s) { return s.id === d.slotId; })[0].label,
+    return { id: 'LL' + d.date.substr(5, 2) + d.date.substr(8, 2) + '-DEM', date: d.date, dateLabel: dlabel(d.date), slotId: d.slotId, slot: d.slotId === 'CUSTOM' ? d.customTime + '-' + (function (t) { var m = +t.substr(0, 2) * 60 + +t.substr(3, 2) + 120; return pad(Math.floor(m / 60)) + ':' + pad(m % 60); })(d.customTime) : cfg.slots.filter(function (s) { return s.id === d.slotId; })[0].label, pending: d.slotId === 'CUSTOM' && !d.admin,
       main: m.name, addons: add.join('、'), price: m.min + ex, priceMax: m.max + ex, priceText: price(m.min + ex, m.max + ex), status: '已預約' };
   };
   var locks = function () { return { holidays: demo.locks.holidays, locks: demo.locks.locks }; };
